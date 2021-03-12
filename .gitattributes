@@ -1,0 +1,3 @@
+*.* linguist-language=JavaScript
+*.js    eol=lf
+*.json  eol=lf
