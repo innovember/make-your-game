@@ -1,13 +1,17 @@
 package main
 
 import (
+	"github.com/innovember/make-your-game/api/middleware"
+	s "github.com/innovember/make-your-game/api/scoreboard"
 	"log"
 	"net/http"
-	//handlers "github.com/innovember/make-your-game/api/scoreboard"
 )
 
 func main() {
 	mux := http.NewServeMux()
+	mw := middleware.NewMiddlewareManager()
+	scoreboardHandler := s.NewScoreboardHandler()
+	scoreboardHandler.Configure(mux, mw)
 	log.Println("Server is listening... http://localhost:8082/")
 	if err := http.ListenAndServe(":8082", mux); err != nil {
 		log.Fatal("ListenAndServe: ", err)

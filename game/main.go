@@ -11,6 +11,6 @@ func main() {
 	http.Handle("/", fs)
 	log.Println("Listening on http://localhost:8081/")
 	if err := http.ListenAndServe(":8081", nil); err != nil {
-		log.Fatal(err)
+		log.Fatal("ListenAndServe: ", err)
 	}
 }
