@@ -156,3 +156,69 @@ class Bomberman extends Entity {
 		this.direction = 'down'
 	}
 }
+
+class Block {
+	constructor({board, x, y}) {
+		this.board = board
+		this.x = x
+		this.y = y
+	}
+	initialize = () => {
+		this.createHTML()
+	}
+	createElement() {
+		this.div = document.createElement('div')
+		this.div.style.gridColumnStart = String(this.x)
+		this.div.style.gridRowStart = String(this.y)
+		this.board.append(this.div)
+	}
+}
+
+class Rock extends Block {
+	constructor({board, x, y}) {
+		super({board, x, y})
+
+		this.addClass()
+	}
+
+	addClass = () => {
+		this.div.classList.add('rock')
+	}
+}
+
+class ExitDoor extends Block {
+	constructor({board, x, y}) {
+		super({board, x, y})
+
+		this.addClass()
+	}
+
+	addClass = () => {
+		this.div.classList.add('exit-door')
+	}
+}
+
+class Wall extends Block {
+	constructor({ board, x, y }) {
+		super({ board, x, y })
+
+		this.addImage()
+	}
+
+	addClass = () => {
+		this.div.classList.add('wall')
+	}
+	
+	addImage = () => {
+		this.addClass()
+
+		this.img = document.createElement('img')
+		this.img.src = './img/wall.png'
+		this.img.alt = 'wall'
+		this.div.append(this.img)
+	}
+
+	explode() {
+		this.img.classList.add('wall-explode')
+	}
+}
