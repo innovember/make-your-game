@@ -2,10 +2,11 @@ package scoreboard
 
 import (
 	"encoding/json"
-	"github.com/innovember/make-your-game/api/middleware"
-	"github.com/innovember/make-your-game/api/response"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/innovember/make-your-game/api/middleware"
+	"github.com/innovember/make-your-game/api/response"
 )
 
 type ScoreboardHandler struct {
@@ -73,7 +74,7 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 		ioutil.WriteFile("scoreboard/scoreboard.json", newScores, 0777)
 		response.Success(w, "score added to list", http.StatusCreated, input)
 	} else {
-		http.Error(w, "Only POST method allowed, return to main page", 405)
+		http.Error(w, "Only POST method allowed, return to main page", http.StatusMethodNotAllowed)
 		return
 	}
 }
