@@ -8,6 +8,7 @@ export class Entity {
     this.left = left || PIXEL_SIZE * 2
     this.top = top || PIXEL_SIZE * 2
     this.size = TILE_SIZE * 0.75
+    this.wallPass = false
 
     this.createHTML()
     this.draw()
