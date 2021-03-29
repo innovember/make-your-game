@@ -1,41 +1,58 @@
-import { Entity } from '../entity.js'
-import {getRandomDirection} from '../../../utils/helpers.js'
+import {
+  ENEMY_DYING_TIME,
+  ENEMY_ID,
+  increaseEnemyID,
+} from "../../../utils/constants.js"
+import { getRandomDirection } from "../../../utils/helpers.js"
+import { Timer } from "../../../utils/timers/timer.js"
+import { Entity } from "../entity.js"
 
 export class Enemy extends Entity {
-	constructor({board, pixelSize, left, top, xp}) {
-		super({board, pixelSize, left, top})
-		this.speed /= 2
-        this.direction = getRandomDirection()
-        
-		this.createHTML()
-	}
+  constructor({ board, left, top, xp }) {
+    super({ board, left, top })
+    this.id = ENEMY_ID
+    increaseEnemyID()
+    this.xp = xp
+    this.direction = getRandomDirection()
+    this.dead = false
+    this.createHTML()
+  }
 
-	createHTML = () => {
-		this.div.className = 'enemy'
-		this.img.src = './img/enemy.png'
-	}
+  createHTML = (src) => {
+    this.div.className = "enemy"
+    this.img.src = src
+  }
 
-	moveLeft() {
-		super.moveLeft()
-		this.img.className = 'enemy-walk-left'
-		this.direction = 'left'
-	}
+  moveLeft(speed) {
+    super.moveLeft(speed)
+    this.img.className = "enemy-walk-left"
+    this.direction = "left"
+  }
 
-	moveRight() {
-		super.moveRight()
-		this.img.className = 'enemy-walk-right'
-		this.direction = 'right'
-	}
+  moveRight(speed) {
+    super.moveRight(speed)
+    this.img.className = "enemy-walk-right"
+    this.direction = "right"
+  }
 
-	moveUp() {
-		super.moveUp()
-		this.img.className = 'enemy-walk-up'
-		this.direction = 'up'
-	}
+  moveUp(speed) {
+    super.moveUp(speed)
+    this.img.className = "enemy-walk-up"
+    this.direction = "up"
+  }
 
-	moveDown() {
-		super.moveDown()
-		this.img.className = 'enemy-walk-down'
-		this.direction = 'down'
-	}
+  moveDown(speed) {
+    super.moveDown(speed)
+    this.img.className = "enemy-walk-down"
+    this.direction = "down"
+  }
+
+  die() {
+    this.img.className = "enemy-die"
+    this.dead = true
+    this.timer = new Timer(() => {
+      this.img.className = "enemy-dead"
+      this.div.remove()
+    }, ENEMY_DYING_TIME)
+  }
 }
