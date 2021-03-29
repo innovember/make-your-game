@@ -6,6 +6,7 @@ import {
 import { getRandomDirection } from "../../../utils/helpers.js"
 import { Timer } from "../../../utils/timers/timer.js"
 import { Entity } from "../entity.js"
+import { EnemyXP } from "./enemyXP.js"
 
 export class Enemy extends Entity {
   constructor({ board, left, top, xp, type }) {
@@ -102,6 +103,12 @@ export class Enemy extends Entity {
     this.timer = new Timer(() => {
       this.img.className = "enemy-dead"
       this.div.remove()
+      new EnemyXP({
+        board: this.board,
+        left: this.left,
+        top: this.top,
+        amount: this.xp,
+      })
     }, ENEMY_DYING_TIME)
   }
 }

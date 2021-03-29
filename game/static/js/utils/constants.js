@@ -6,7 +6,8 @@ export const PIXEL_SIZE = 2,
 export const BOMBERMAN_DYING_TIME = 600
 
 // Enemy
-export const ENEMY_DYING_TIME = 1100
+export const ENEMY_DYING_TIME = 1100,
+  ENEMY_XP_SHOW_TIME = 2000
 
 export let ENEMY_ID = 0
 
