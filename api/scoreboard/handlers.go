@@ -28,7 +28,7 @@ func (sh *ScoreboardHandler) GetAllScoresHandler(w http.ResponseWriter, r *http.
 			content []byte
 			scores  []ScoreBoard
 		)
-		content, err = ioutil.ReadFile("scoreboard/scoreboard.json")
+		content, err = ioutil.ReadFile(s.Path)
 		if err != nil {
 			response.Error(w, http.StatusInternalServerError, err)
 			return
@@ -57,7 +57,7 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 			response.Error(w, http.StatusBadRequest, err)
 			return
 		}
-		content, err = ioutil.ReadFile("scoreboard/scoreboard.json")
+		content, err = ioutil.ReadFile(s.Path)
 		if err != nil {
 			response.Error(w, http.StatusInternalServerError, err)
 			return
@@ -71,7 +71,7 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 			response.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-		ioutil.WriteFile("scoreboard/scoreboard.json", newScores, 0777)
+		ioutil.WriteFile(s.Path, newScores, 0777)
 		response.Success(w, "score added to list", http.StatusCreated, input)
 	} else {
 		http.Error(w, "Only POST method allowed, return to main page", http.StatusMethodNotAllowed)

@@ -1,13 +1,15 @@
 package main
 
 import (
-	"github.com/innovember/make-your-game/api/middleware"
-	s "github.com/innovember/make-your-game/api/scoreboard"
 	"log"
 	"net/http"
+
+	"github.com/innovember/make-your-game/api/middleware"
+	s "github.com/innovember/make-your-game/api/scoreboard"
 )
 
 func main() {
+	s.SetupScoreBoard()
 	mux := http.NewServeMux()
 	mw := middleware.NewMiddlewareManager()
 	scoreboardHandler := s.NewScoreboardHandler()
