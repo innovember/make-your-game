@@ -40,3 +40,6 @@ yarn-error.log*
 *.code-workspace
 ### idea ###
 .idea
+
+# json data
+api/scoreboard/scoreboard.json

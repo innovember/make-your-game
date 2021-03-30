@@ -24,22 +24,17 @@ func (sh *ScoreboardHandler) Configure(mux *http.ServeMux, mw *middleware.Middle
 func (sh *ScoreboardHandler) GetAllScoresHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		var (
-			err     error
-			content []byte
-			scores  []ScoreBoard
+			err    error
+			scores []ScoreBoard
 		)
-		content, err = ioutil.ReadFile(s.Path)
-		if err != nil {
-			response.Error(w, http.StatusInternalServerError, err)
-			return
-		}
-		if err = json.Unmarshal(content, &scores); err != nil {
+		s.readContent()
+		if err = json.Unmarshal(s.File, &scores); err != nil {
 			response.Error(w, http.StatusInternalServerError, err)
 			return
 		}
 		response.Success(w, "all scores", http.StatusOK, scores)
 	} else {
-		http.Error(w, "Only GET method allowed, return to main page", 405)
+		http.Error(w, "Only GET method allowed, return to main page", http.StatusMethodNotAllowed)
 		return
 	}
 }
