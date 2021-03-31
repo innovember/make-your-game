@@ -62,7 +62,12 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 			response.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-		scores = append(scores, input)
+		if isUniqueValues(input, scores) {
+			scores = append(scores, input)
+		} else {
+			response.Error(w, http.StatusBadRequest, errors.New("values already exist in scoreboard"))
+			return
+		}
 		if newScores, err = json.Marshal(scores); err != nil {
 			response.Error(w, http.StatusInternalServerError, err)
 			return
@@ -95,4 +100,15 @@ func isValid(input ScoreBoard) (err error) {
 		return errors.New("incorrect time value")
 	}
 	return nil
+}
+
+func isUniqueValues(input ScoreBoard, scores []ScoreBoard) bool {
+	for _, elem := range scores {
+		if (elem.Nickname == input.Nickname) && (elem.Score == input.Score) &&
+			(elem.Lives == input.Lives) && (elem.Time == input.Time) &&
+			(elem.Stage == input.Stage) {
+			return false
+		}
+	}
+	return true
 }
