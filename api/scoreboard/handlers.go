@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"strings"
+	"strconv"
 
 	"github.com/innovember/make-your-game/api/middleware"
 	"github.com/innovember/make-your-game/api/response"
@@ -21,6 +21,7 @@ func NewScoreboardHandler() *ScoreboardHandler {
 func (sh *ScoreboardHandler) Configure(mux *http.ServeMux, mw *middleware.MiddlewareManager) {
 	mux.HandleFunc("/api/scoreboard/add", mw.SetHeaders(sh.AddNewScoreHandler))
 	mux.HandleFunc("/api/scoreboard/get", mw.SetHeaders(sh.GetAllScoresHandler))
+	mux.HandleFunc("/api/scoreboard/get/page/", mw.SetHeaders(sh.GetScoresByPageHandler))
 }
 
 func (sh *ScoreboardHandler) GetAllScoresHandler(w http.ResponseWriter, r *http.Request) {
@@ -81,53 +82,37 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 	}
 }
 
-func isValid(input ScoreBoard) (err error) {
-	trimmedName := strings.Trim(input.Nickname, " ")
-	if len(trimmedName) < 3 {
-		return errors.New("nickname too short")
-	} else if len(trimmedName) > 10 {
-		return errors.New("nickname too long")
-	}
-	if input.Stage < 1 || input.Stage > 3 {
-		return errors.New("incorrect stage value")
-	}
-	if input.Lives < 0 || input.Lives > 3 {
-		return errors.New("incorrect lives value")
-	}
-	if input.Score < 0 || input.Score > 50000 {
-		return errors.New("incorrect score value")
-	}
-	if input.Time < 0 || input.Time > 300 {
-		return errors.New("incorrect time value")
-	}
-	return nil
-}
-
-func isUniqueValues(input ScoreBoard, scores []ScoreBoard) bool {
-	for _, elem := range scores {
-		if (elem.Nickname == input.Nickname) && (elem.Score == input.Score) &&
-			(elem.Lives == input.Lives) && (elem.Time == input.Time) &&
-			(elem.Stage == input.Stage) {
-			return false
+func (sh *ScoreboardHandler) GetScoresByPageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		var (
+			err           error
+			scores        []ScoreBoard
+			pageNum       int
+			scoresPerPage = 10
+			scoresByPage  []ScoreBoard
+		)
+		_id := r.URL.Path[len("/api/scoreboard/get/page/"):]
+		if pageNum, err = strconv.Atoi(_id); err != nil {
+			response.Error(w, http.StatusBadRequest, errors.New("page number not valid"))
+			return
 		}
-	}
-	return true
-}
-
-func sortByScore(scores []ScoreBoard) []ScoreBoard {
-	for {
-		swapped := false
-		for i := 1; i < len(scores); i++ {
-			if scores[i].Score > scores[i-1].Score {
-				swapped = true
-				temp := scores[i-1]
-				scores[i-1] = scores[i]
-				scores[i] = temp
-			}
+		if pageNum < 1 {
+			response.Error(w, http.StatusBadRequest, errors.New("page number should be higher than 0"))
+			return
 		}
-		if !swapped {
-			break
+		s.readContent()
+		if err = json.Unmarshal(s.File, &scores); err != nil {
+			response.Error(w, http.StatusInternalServerError, err)
+			return
 		}
+		sortedScores := sortByScore(scores)
+		if scoresByPage = getScoresByPage(sortedScores, pageNum, scoresPerPage); scoresByPage == nil {
+			response.Error(w, http.StatusInternalServerError, errors.New("there is no data for this page"))
+			return
+		}
+		response.Success(w, "scores by page", http.StatusOK, scoresByPage)
+	} else {
+		http.Error(w, "Only GET method allowed, return to main page", http.StatusMethodNotAllowed)
+		return
 	}
-	return scores
 }
