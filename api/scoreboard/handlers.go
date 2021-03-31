@@ -34,7 +34,8 @@ func (sh *ScoreboardHandler) GetAllScoresHandler(w http.ResponseWriter, r *http.
 			response.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-		response.Success(w, "all scores", http.StatusOK, scores)
+		sortedScores := sortByScore(scores)
+		response.Success(w, "all scores", http.StatusOK, sortedScores)
 	} else {
 		http.Error(w, "Only GET method allowed, return to main page", http.StatusMethodNotAllowed)
 		return
@@ -111,4 +112,22 @@ func isUniqueValues(input ScoreBoard, scores []ScoreBoard) bool {
 		}
 	}
 	return true
+}
+
+func sortByScore(scores []ScoreBoard) []ScoreBoard {
+	for {
+		swapped := false
+		for i := 1; i < len(scores); i++ {
+			if scores[i].Score > scores[i-1].Score {
+				swapped = true
+				temp := scores[i-1]
+				scores[i-1] = scores[i]
+				scores[i] = temp
+			}
+		}
+		if !swapped {
+			break
+		}
+	}
+	return scores
 }
