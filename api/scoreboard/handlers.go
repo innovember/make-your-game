@@ -2,8 +2,10 @@ package scoreboard
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/innovember/make-your-game/api/middleware"
 	"github.com/innovember/make-your-game/api/response"
@@ -43,7 +45,6 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 	if r.Method == "POST" {
 		var (
 			err       error
-			content   []byte
 			input     ScoreBoard
 			newScores []byte
 			scores    []ScoreBoard
@@ -52,12 +53,12 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 			response.Error(w, http.StatusBadRequest, err)
 			return
 		}
-		content, err = ioutil.ReadFile(s.Path)
-		if err != nil {
-			response.Error(w, http.StatusInternalServerError, err)
+		if err = isValid(input); err != nil {
+			response.Error(w, http.StatusBadRequest, err)
 			return
 		}
-		if err = json.Unmarshal(content, &scores); err != nil {
+		s.readContent()
+		if err = json.Unmarshal(s.File, &scores); err != nil {
 			response.Error(w, http.StatusInternalServerError, err)
 			return
 		}
@@ -72,4 +73,26 @@ func (sh *ScoreboardHandler) AddNewScoreHandler(w http.ResponseWriter, r *http.R
 		http.Error(w, "Only POST method allowed, return to main page", http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+func isValid(input ScoreBoard) (err error) {
+	trimmedName := strings.Trim(input.Nickname, " ")
+	if len(trimmedName) < 3 {
+		return errors.New("nickname too short")
+	} else if len(trimmedName) > 10 {
+		return errors.New("nickname too long")
+	}
+	if input.Stage < 1 || input.Stage > 3 {
+		return errors.New("incorrect stage value")
+	}
+	if input.Lives < 0 || input.Lives > 3 {
+		return errors.New("incorrect lives value")
+	}
+	if input.Score < 0 || input.Score > 50000 {
+		return errors.New("incorrect score value")
+	}
+	if input.Time < 0 || input.Time > 300 {
+		return errors.New("incorrect time value")
+	}
+	return nil
 }
