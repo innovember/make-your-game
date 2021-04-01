@@ -1,13 +1,13 @@
-import { Block } from './block.js'
+import { Block } from "./block.js"
 
 export class ExitDoor extends Block {
-	constructor({board, x, y}) {
-		super({board, x, y})
+  constructor({ board, x, y }) {
+    super({ board, x, y })
 
-		this.addClass()
-	}
+    this.addClass()
+  }
 
-	addClass = () => {
-		this.div.classList.add('exit-door')
-	}
+  addClass = () => {
+    this.div.classList.add("exit-door")
+  }
 }

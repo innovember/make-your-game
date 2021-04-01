@@ -1,7 +1,7 @@
 import {
-  ENEMY_DYING_TIME,
-  ENEMY_ID,
-  increaseEnemyID,
+  DURATIONS,
+  createEnemyID,
+  DIRECTIONS,
 } from "../../../utils/constants.js"
 import { getRandomDirection } from "../../../utils/helpers.js"
 import { Timer } from "../../../utils/timers/timer.js"
@@ -11,8 +11,7 @@ import { EnemyXP } from "./enemyXP.js"
 export class Enemy extends Entity {
   constructor({ board, left, top, xp, type }) {
     super({ board, left, top })
-    this.id = ENEMY_ID
-    increaseEnemyID()
+    this.id = createEnemyID()
     this.xp = xp
     this.direction = getRandomDirection()
     this.dead = false
@@ -76,25 +75,25 @@ export class Enemy extends Entity {
   moveLeft(speed) {
     super.moveLeft(speed)
     this.img.className = "enemy-walk-left"
-    this.direction = "left"
+    this.direction = DIRECTIONS.LEFT
   }
 
   moveRight(speed) {
     super.moveRight(speed)
     this.img.className = "enemy-walk-right"
-    this.direction = "right"
+    this.direction = DIRECTIONS.RIGHT
   }
 
   moveUp(speed) {
     super.moveUp(speed)
     this.img.className = "enemy-walk-up"
-    this.direction = "up"
+    this.direction = DIRECTIONS.UP
   }
 
   moveDown(speed) {
     super.moveDown(speed)
     this.img.className = "enemy-walk-down"
-    this.direction = "down"
+    this.direction = DIRECTIONS.DOWN
   }
 
   die() {
@@ -109,6 +108,6 @@ export class Enemy extends Entity {
         top: this.top,
         amount: this.xp,
       })
-    }, ENEMY_DYING_TIME)
+    }, DURATIONS.ENEMY_DYING_TIME)
   }
 }

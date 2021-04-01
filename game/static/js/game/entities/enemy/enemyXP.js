@@ -1,4 +1,4 @@
-import { ENEMY_XP_SHOW_TIME, PIXEL_SIZE } from "../../../utils/constants.js"
+import { DURATIONS, PIXEL_SIZE } from "../../../utils/constants.js"
 import { Timer } from "../../../utils/timers/timer.js"
 
 export class EnemyXP {
@@ -27,6 +27,6 @@ export class EnemyXP {
   deleteXP() {
     new Timer(() => {
       this.div.remove()
-    }, ENEMY_XP_SHOW_TIME)
+    }, DURATIONS.ENEMY_XP_SHOW_TIME)
   }
 }

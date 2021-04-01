@@ -1,14 +1,14 @@
-import { PIXEL_SIZE, TILE_SIZE } from "../../utils/constants.js"
+import { DIRECTIONS, PIXEL_SIZE, TILE_SIZE } from "../../utils/constants.js"
 
 export class Entity {
   constructor(board, left, top) {
     this.board = board
-    this.pixelSize = pixelSize
     this.speed = 1
     this.left = left || PIXEL_SIZE * 2
     this.top = top || PIXEL_SIZE * 2
     this.size = TILE_SIZE * 0.75
     this.wallPass = false
+    this.direction = DIRECTIONS.DOWN
 
     this.createHTML()
     this.draw()
@@ -48,5 +48,10 @@ export class Entity {
   moveDown(speed) {
     if (speed) this.top += speed
     else this.top += this.speed
+  }
+
+  setLookDirection = (entity) => {
+    const directions = ["left", "right", "up", "down"]
+    this.img.className = `${entity}-look-${directions[this.direction]}`
   }
 }

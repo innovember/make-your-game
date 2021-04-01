@@ -1,5 +1,5 @@
 import { Entity } from "../entity.js"
-import { BOMBERMAN_DYING_TIME, PIXEL_SIZE } from "../../../utils/constants.js"
+import { DURATIONS, DIRECTIONS, PIXEL_SIZE } from "../../../utils/constants.js"
 import { Timer } from "../../../utils/timers/timer.js"
 
 export class Bomberman extends Entity {
@@ -7,7 +7,6 @@ export class Bomberman extends Entity {
     super({ board })
     this.left = 2 * PIXEL_SIZE
     this.top = 2 * PIXEL_SIZE
-    this.direction = "down"
     this.liveCount = liveCount
   }
 
@@ -27,25 +26,25 @@ export class Bomberman extends Entity {
   moveLeft(speed) {
     super.moveLeft(speed)
     this.img.className = "bomberman-walk-left"
-    this.direction = "left"
+    this.direction = DIRECTIONS.LEFT
   }
 
   moveRight(speed) {
     super.moveRight(speed)
     this.img.className = "bomberman-walk-right"
-    this.direction = "right"
+    this.direction = DIRECTIONS.RIGHT
   }
 
   moveUp(speed) {
     super.moveUp(speed)
     this.img.className = "bomberman-walk-up"
-    this.direction = "up"
+    this.direction = DIRECTIONS.UP
   }
 
   moveDown(speed) {
     super.moveDown(speed)
     this.img.className = "bomberman-walk-down"
-    this.direction = "down"
+    this.direction = DIRECTIONS.DOWN
   }
 
   resetPosition = () => {
@@ -58,6 +57,6 @@ export class Bomberman extends Entity {
     this.liveCount--
     this.timer = new Timer(() => {
       this.img.className = "bomberman-dead"
-    }, BOMBERMAN_DYING_TIME)
+    }, DURATIONS.BOMBERMAN_DYING_TIME)
   }
 }
