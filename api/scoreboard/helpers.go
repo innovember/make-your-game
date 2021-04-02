@@ -67,3 +67,21 @@ func getScoresByPage(scores []ScoreBoard, pageNum int, scoresPerPage int) []Scor
 	}
 	return scores[start:stop]
 }
+
+func sortByTime(scores []ScoreBoard) []ScoreBoard {
+	for {
+		swapped := false
+		for i := 1; i < len(scores); i++ {
+			if scores[i].Time < scores[i-1].Time {
+				swapped = true
+				temp := scores[i-1]
+				scores[i-1] = scores[i]
+				scores[i] = temp
+			}
+		}
+		if !swapped {
+			break
+		}
+	}
+	return scores
+}

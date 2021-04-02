@@ -35,7 +35,8 @@ func (sh *ScoreboardHandler) GetAllScoresHandler(w http.ResponseWriter, r *http.
 			response.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-		sortedScores := sortByScore(scores)
+		sortedScoresByTime := sortByTime(scores)
+		sortedScores := sortByScore(sortedScoresByTime)
 		response.Success(w, "all scores", http.StatusOK, sortedScores)
 	} else {
 		http.Error(w, "Only GET method allowed, return to main page", http.StatusMethodNotAllowed)
@@ -105,7 +106,8 @@ func (sh *ScoreboardHandler) GetScoresByPageHandler(w http.ResponseWriter, r *ht
 			response.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-		sortedScores := sortByScore(scores)
+		sortedScoresByTime := sortByTime(scores)
+		sortedScores := sortByScore(sortedScoresByTime)
 		if scoresByPage = getScoresByPage(sortedScores, pageNum, scoresPerPage); scoresByPage == nil {
 			response.Error(w, http.StatusInternalServerError, errors.New("there is no data for this page"))
 			return
