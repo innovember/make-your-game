@@ -8,6 +8,12 @@ export const DEFAULT = {
   ROUND_TIME: 200,
 }
 
+export const TILES = {
+  EMPTY: 0,
+  ROCK: 1,
+  WALL: 2,
+}
+
 export const DIRECTIONS = {
   LEFT: 0,
   RIGHT: 1,
@@ -59,3 +65,31 @@ export const POWER_UP_TYPES = [
   "flame-pass",
   "mystery",
 ]
+
+// Volume
+export const setSFXVolume = (val) => {
+  SFX_VOLUME = val
+}
+
+export const setMusicVolume = (val) => {
+  MUSIC_VOLUME = val
+}
+
+export let SFX_VOLUME = 0.2,
+  MUSIC_VOLUME = 0.2
+
+// Menu
+export const GAME_MENU = {
+  CONTINUE: 0,
+  RESTART: 1,
+  SFX: 2,
+  MUSIC: 3,
+  MAIN_MENU: 4,
+}
+
+export const MAIN_MENU = {
+  START: 0,
+  CONTROLS: 1,
+  HELP: 2,
+  LEADERBOARD: 3,
+}
