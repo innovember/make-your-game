@@ -16,7 +16,7 @@ export class Bomberman extends Entity {
 
   createHTML = () => {
     this.div.id = "bomberman"
-    this.img.src = "./img/bomberman.png"
+    this.img.src = "./assets/img/bomberman.png"
     this.img.alt = "bomberman"
     this.liveCountDiv = document.createElement("div")
     this.liveCountDiv.id = "live-count"
