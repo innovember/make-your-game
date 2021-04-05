@@ -86,4 +86,23 @@ export class GameStageOptions {
     this.roundTime += this.passedTime
     this.passedTime = 0
   }
+
+  reset = (settings) => {
+    this.score = 0
+    this.bombCount = settings.bombCount
+    this.explosionSize = settings.explosionSize
+  }
+
+  draw = () => {
+    this.drawTimer()
+    this.drawScore()
+  }
+
+  drawTimer = () => {
+    this.timerDiv.querySelector("span").innerText = `${this.roundTime}`
+  }
+
+  drawScore = () => {
+    this.scoreDiv.querySelector("span").innerText = `${this.score}`
+  }
 }
