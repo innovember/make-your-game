@@ -73,4 +73,71 @@ export class GameStage {
     this.board.style.width = `${TILE_SIZE * this.options.columns}px`;
     this.board.style.height = `${TILE_SIZE * this.options.rows}px`;
   };
+
+  // Tiles
+  createDefaultTiles = () => {
+    this.createDefaultRocks();
+    this.createDefaultWalls();
+  };
+
+  createCustomTiles = () => {
+    this.createBorderRocks();
+    for (let i = 0; i < this.options.map.length; i++)
+      for (let j = 0; j < this.options.map[i].length; j++) {
+        switch (this.options.map[i][j]) {
+          case TILES.ROCK:
+            const rock = new Rock({ board: this.board, x: j + 2, y: i + 2 });
+            this.rocks.set(rock.id, rock);
+            break;
+          case TILES.WALL:
+            const wall = new Wall({ board: this.board, x: j + 2, y: i + 2 });
+            this.walls.set(wall.id, wall);
+            break;
+        }
+      }
+  };
+
+  // Blocks
+  createDefaultRocks = () => {
+    this.createBorderRocks();
+    for (let i = 3; i < this.options.columns; i += 2)
+      for (let j = 3; j < this.options.rows; j += 2) {
+        const rock = new Rock({ board: this.board, x: i, y: j });
+        this.rocks.set(rock.id, rock);
+      }
+  };
+
+  createDefaultWalls = () => {
+    const count = Math.round((this.options.rows * this.options.columns) / 8);
+    const wallCount = getRandomInt(count * 0.9, count * 1.1);
+    let sum = 0;
+    while (sum < wallCount) {
+      const x = getRandomInt(2, this.options.columns),
+        y = getRandomInt(2, this.options.rows);
+      if (!this.isBlock(x, y) && !(x <= 3 && y <= 3)) {
+        const wall = new Wall({ board: this.board, x, y });
+        this.walls.set(wall.id, wall);
+        sum++;
+      }
+    }
+  };
+
+  createBorderRocks = () => {
+    for (let i = 1; i <= this.options.columns; i++) {
+      const rock1 = new Rock({ board: this.board, x: i, y: 1 }),
+        rock2 = new Rock({ board: this.board, x: i, y: this.options.rows });
+      this.rocks.set(rock1.id, rock1);
+      this.rocks.set(rock2.id, rock2);
+    }
+    for (let i = 2; i < this.options.rows; i++) {
+      const rock1 = new Rock({ board: this.board, x: 1, y: i }),
+        rock2 = new Rock({
+          board: this.board,
+          x: this.options.columns,
+          y: i,
+        });
+      this.rocks.set(rock1.id, rock1);
+      this.rocks.set(rock2.id, rock2);
+    }
+  };
 }
